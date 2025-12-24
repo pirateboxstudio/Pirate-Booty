@@ -43,6 +43,7 @@ namespace crypto {
 
   extern "C" {
 #include "hash-ops.h"
+#include "pirate-hash.h"
   }
 
 #pragma pack(push, 1)
@@ -90,6 +91,20 @@ namespace crypto {
 
   inline void tree_hash(const hash *hashes, std::size_t count, hash &root_hash) {
     tree_hash(reinterpret_cast<const char (*)[HASH_SIZE]>(hashes), count, reinterpret_cast<char *>(&root_hash));
+  }
+
+  /*
+    🏴‍☠️ Pirate Hash functions (Hybrid Cuckoo Cycle + CryptoNight PoW) 🏴‍☠️
+  */
+
+  inline void pirate_hash(const void *data, std::size_t length, hash &hash, uint64_t height = 0) {
+    pirate_hash(data, length, reinterpret_cast<char *>(&hash), height, NULL);
+  }
+
+  inline hash pirate_hash(const void *data, std::size_t length, uint64_t height = 0) {
+    hash h;
+    pirate_hash(data, length, reinterpret_cast<char *>(&h), height, NULL);
+    return h;
   }
 
   inline std::ostream &operator <<(std::ostream &o, const crypto::hash &v) {

@@ -98,6 +98,8 @@ bool tree_branch_hash(const char hash[HASH_SIZE], const char (*branch)[HASH_SIZE
 bool is_branch_in_tree(const char hash[HASH_SIZE], const char root[HASH_SIZE], const char (*branch)[HASH_SIZE], size_t depth, uint32_t path);
 
 #define RX_BLOCK_VERSION	12
+#define PIRATE_BLOCK_VERSION	13  // 🏴‍☠️ Pirate Hash activation block version
+
 void rx_slow_hash_allocate_state(void);
 void rx_slow_hash_free_state(void);
 uint64_t rx_seedheight(const uint64_t height);

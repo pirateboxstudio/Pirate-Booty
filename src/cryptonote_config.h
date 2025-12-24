@@ -77,6 +77,8 @@
 #define ORPHANED_BLOCKS_MAX_COUNT                       100
 
 
+// 🏴‍☠️ PIRATE BOOTY (PBT) CONFIGURATION 🏴‍☠️
+#define PIRATE_BLOCK_TIME                               60   // 60 seconds per block - fast like a pirate ship!
 #define DIFFICULTY_TARGET_V2                            120  // seconds
 #define DIFFICULTY_TARGET_V1                            60  // seconds - before first fork
 #define DIFFICULTY_WINDOW                               720 // blocks

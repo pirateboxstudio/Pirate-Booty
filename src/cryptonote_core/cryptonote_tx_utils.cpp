@@ -685,7 +685,14 @@ namespace cryptonote
       epee::string_tools::hex_to_pod(longhash_202612, res);
       return true;
     }
-    if (major_version >= RX_BLOCK_VERSION)
+    
+    // 🏴‍☠️ Pirate Hash: Hybrid Cuckoo Cycle + CryptoNight PoW 🏴‍☠️
+    if (major_version >= PIRATE_BLOCK_VERSION)
+    {
+      LOG_PRINT_L3("🏴‍☠️ Using Pirate Hash for block " << height);
+      get_pirate_hash(bd.data(), bd.size(), res.data, height);
+    }
+    else if (major_version >= RX_BLOCK_VERSION)
     {
       crypto::hash hash;
       if (pbc != NULL)

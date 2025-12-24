@@ -407,9 +407,9 @@ namespace cryptonote
     }
 
     if (threads_count == 0)
-      MINFO("Mining has started, autodetecting optimal number of threads, good luck!" );
+      MINFO("🏴‍☠️ Ahoy! Mining has started, autodetecting crew size (threads), set sail for booty!" );
     else
-      MINFO("Mining has started with " << threads_count << " threads, good luck!" );
+      MINFO("🏴‍☠️ Ahoy! " << threads_count << " pirates ready to mine! Hoisting the sails for treasure!" );
 
     if( get_is_background_mining_enabled() )
     {
@@ -468,7 +468,7 @@ namespace cryptonote
     m_background_mining_thread.join();
     m_is_background_mining_enabled = false;
 
-    MINFO("Mining has been stopped, " << m_threads.size() << " finished" );
+    MINFO("⚓ Mining stopped. " << m_threads.size() << " pirates returned to port. Fair winds!" );
     m_threads.clear();
     m_threads_autodetect.clear();
     return true;
@@ -590,7 +590,7 @@ namespace cryptonote
       {
         //we lucky!
         ++m_config.current_extra_message_index;
-        MGINFO_GREEN("Found block " << get_block_hash(b) << " at height " << height << " for difficulty: " << local_diff);
+        MGINFO_GREEN("🏴‍☠️ Booty mined successfully! Block " << get_block_hash(b) << " at height " << height << " | Difficulty: " << local_diff << " | Another doubloon added to the chest!");
         cryptonote::block_verification_context bvc;
         if(!m_phandler->handle_block_found(b, bvc) || !bvc.m_added_to_main_chain)
         {
