@@ -51,7 +51,8 @@
 #define BLOCKCHAIN_TIMESTAMP_CHECK_WINDOW               60
 
 // MONEY_SUPPLY - total number coins to be generated
-#define MONEY_SUPPLY                                    ((uint64_t)(-1))
+// 🏴‍☠️ PIRATE BOOTY: Fixed supply of 1,021,000,000 PBT 🏴‍☠️
+#define MONEY_SUPPLY                                    ((uint64_t)(1021000000) * COIN) // 1,021,000,000 PBT
 #define EMISSION_SPEED_FACTOR_PER_MINUTE                (20)
 #define FINAL_SUBSIDY_PER_MINUTE                        ((uint64_t)300000000000) // 3 * pow(10, 11)
 
@@ -78,6 +79,10 @@
 
 
 // 🏴‍☠️ PIRATE BOOTY (PBT) CONFIGURATION 🏴‍☠️
+// Max Supply: 1,021,000,000 PBT (defined in MONEY_SUPPLY above)
+// Block Time: 60 seconds
+// Initial Block Reward: ~50 PBT (adjusted by emission algorithm)
+// Halving: Smooth emission curve via EMISSION_SPEED_FACTOR
 #define PIRATE_BLOCK_TIME                               60   // 60 seconds per block - fast like a pirate ship!
 #define DIFFICULTY_TARGET_V2                            120  // seconds
 #define DIFFICULTY_TARGET_V1                            60  // seconds - before first fork
