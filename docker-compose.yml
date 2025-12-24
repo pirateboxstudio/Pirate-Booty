@@ -1,0 +1,92 @@
+# 🏴‍☠️ Pirate Booty Docker Compose
+# Complete stack: daemon, wallet RPC, and explorer
+
+version: '3.8'
+
+services:
+  # Pirate Booty Daemon
+  piratebootyd:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NPROC: 4
+    container_name: piratebooty-daemon
+    hostname: piratebooty
+    restart: unless-stopped
+    ports:
+      - "18080:18080"  # P2P
+      - "18081:18081"  # RPC
+    volumes:
+      - piratebooty-data:/home/pirate/.piratebooty
+      - piratebooty-wallet:/wallet
+    networks:
+      - piratebooty-network
+    command: >
+      --p2p-bind-ip=0.0.0.0
+      --p2p-bind-port=18080
+      --rpc-bind-ip=0.0.0.0
+      --rpc-bind-port=18081
+      --confirm-external-bind
+      --non-interactive
+      --log-level=1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18081/get_info"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Wallet RPC Server
+  wallet-rpc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: piratebooty-wallet-rpc
+    restart: unless-stopped
+    ports:
+      - "18082:18082"  # Wallet RPC
+    volumes:
+      - piratebooty-wallet:/wallet
+    networks:
+      - piratebooty-network
+    depends_on:
+      - piratebootyd
+    entrypoint: ["pirate-wallet-rpc"]
+    command: >
+      --daemon-address=piratebootyd:18081
+      --rpc-bind-ip=0.0.0.0
+      --rpc-bind-port=18082
+      --confirm-external-bind
+      --wallet-dir=/wallet
+      --log-level=1
+
+  # Block Explorer (placeholder - to be implemented)
+  explorer:
+    image: nginx:alpine
+    container_name: piratebooty-explorer
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    volumes:
+      - ./explorer/dist:/usr/share/nginx/html:ro
+      - ./explorer/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - piratebooty-network
+    depends_on:
+      - piratebootyd
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  piratebooty-data:
+    driver: local
+  piratebooty-wallet:
+    driver: local
+
+networks:
+  piratebooty-network:
+    driver: bridge
