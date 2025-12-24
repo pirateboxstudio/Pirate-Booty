@@ -56,6 +56,24 @@
 #define EMISSION_SPEED_FACTOR_PER_MINUTE                (20)
 #define FINAL_SUBSIDY_PER_MINUTE                        ((uint64_t)300000000000) // 3 * pow(10, 11)
 
+// 🏴‍☠️ PIRATE BOOTY EMISSION SCHEDULE 🏴‍☠️
+// Stepped emission phases with tail emission
+// Block time: 60 seconds = 525,600 blocks per year
+#define PIRATE_REWARD_EARLY                             ((uint64_t)(500) * COIN)    // 500 PBT per block
+#define PIRATE_REWARD_MID                               ((uint64_t)(250) * COIN)    // 250 PBT per block
+#define PIRATE_REWARD_LATE                              ((uint64_t)(125) * COIN)    // 125 PBT per block
+#define PIRATE_REWARD_FINAL                             ((uint64_t)(62.5 * COIN))   // 62.5 PBT per block
+#define PIRATE_REWARD_TAIL                              ((uint64_t)(3) * COIN)      // 3.0 PBT per block (perpetual)
+
+// Phase boundaries (block heights)
+#define PIRATE_PHASE_EARLY_END                          1051200    // ~2 years (500 PBT)    = 525,600,000 PBT
+#define PIRATE_PHASE_MID_END                            2102400    // ~2 years (250 PBT)    = 262,800,000 PBT
+#define PIRATE_PHASE_LATE_END                           2891040    // ~1.5 years (125 PBT)  = 98,550,000 PBT
+#define PIRATE_PHASE_FINAL_END                          3942240    // ~2 years (62.5 PBT)   = 65,700,000 PBT
+// After PIRATE_PHASE_FINAL_END: tail emission begins (3.0 PBT perpetual)
+// Total main emission: ~952,650,000 PBT
+// Remaining ~68,350,000 PBT distributed before tail emission starts
+
 #define CRYPTONOTE_REWARD_BLOCKS_WINDOW                 100
 #define CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V2    60000 //size of block (bytes) after which reward for block calculated using block size
 #define CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V1    20000 //size of block (bytes) after which reward for block calculated using block size - before first fork

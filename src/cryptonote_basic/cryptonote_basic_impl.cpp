@@ -80,16 +80,36 @@ namespace cryptonote {
     return CRYPTONOTE_MAX_TX_SIZE;
   }
   //-----------------------------------------------------------------------------------------------
-  bool get_block_reward(size_t median_weight, size_t current_block_weight, uint64_t already_generated_coins, uint64_t &reward, uint8_t version) {
+  bool get_block_reward(size_t median_weight, size_t current_block_weight, uint64_t already_generated_coins, uint64_t &reward, uint8_t version, uint64_t height) {
     static_assert(DIFFICULTY_TARGET_V2%60==0&&DIFFICULTY_TARGET_V1%60==0,"difficulty targets must be a multiple of 60");
     const int target = version < 2 ? DIFFICULTY_TARGET_V1 : DIFFICULTY_TARGET_V2;
     const int target_minutes = target / 60;
     const int emission_speed_factor = EMISSION_SPEED_FACTOR_PER_MINUTE - (target_minutes-1);
 
-    uint64_t base_reward = (MONEY_SUPPLY - already_generated_coins) >> emission_speed_factor;
-    if (base_reward < FINAL_SUBSIDY_PER_MINUTE*target_minutes)
-    {
-      base_reward = FINAL_SUBSIDY_PER_MINUTE*target_minutes;
+    // 🏴‍☠️ PIRATE BOOTY: Stepped emission schedule 🏴‍☠️
+    uint64_t base_reward;
+    
+    // Determine reward based on block height
+    if (height < PIRATE_PHASE_EARLY_END) {
+      // Early phase: 500 PBT per block (~2 years)
+      base_reward = PIRATE_REWARD_EARLY;
+    } else if (height < PIRATE_PHASE_MID_END) {
+      // Mid phase: 250 PBT per block (~2 years)
+      base_reward = PIRATE_REWARD_MID;
+    } else if (height < PIRATE_PHASE_LATE_END) {
+      // Late phase: 125 PBT per block (~1.5 years)
+      base_reward = PIRATE_REWARD_LATE;
+    } else if (height < PIRATE_PHASE_FINAL_END) {
+      // Final main emission: 62.5 PBT per block (~2 years)
+      base_reward = PIRATE_REWARD_FINAL;
+    } else if (already_generated_coins < MONEY_SUPPLY) {
+      // Smooth reduction to tail emission from remaining supply
+      uint64_t remaining = MONEY_SUPPLY - already_generated_coins;
+      base_reward = std::max(PIRATE_REWARD_TAIL, remaining / 10000);
+    } else {
+      // Tail emission: 3.0 PBT perpetual
+      // ~1,576,800 PBT/year = ~0.15% initial inflation (declining over time)
+      base_reward = PIRATE_REWARD_TAIL;
     }
 
     uint64_t full_reward_zone = get_min_block_weight(version);
