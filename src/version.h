@@ -1,7 +1,15 @@
 #pragma once
 
+// Pirate Booty Version (PBT)
 extern const char* const MONERO_VERSION_TAG;
 extern const char* const MONERO_VERSION;
 extern const char* const MONERO_RELEASE_NAME;
 extern const char* const MONERO_VERSION_FULL;
 extern const bool MONERO_VERSION_IS_RELEASE;
+
+// Aliases for consistency
+#define PIRATEBOOTY_VERSION_TAG MONERO_VERSION_TAG
+#define PIRATEBOOTY_VERSION MONERO_VERSION
+#define PIRATEBOOTY_RELEASE_NAME MONERO_RELEASE_NAME
+#define PIRATEBOOTY_VERSION_FULL MONERO_VERSION_FULL
+#define PIRATEBOOTY_VERSION_IS_RELEASE MONERO_VERSION_IS_RELEASE

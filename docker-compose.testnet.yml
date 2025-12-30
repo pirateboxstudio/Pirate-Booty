@@ -1,0 +1,157 @@
+version: '3.8'
+
+services:
+  # Pirate Booty Testnet Node
+  piratebooty-testnet:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: piratebooty-testnet
+    restart: unless-stopped
+    ports:
+      - "29080:29080"  # P2P
+      - "29081:29081"  # RPC
+      - "29082:29082"  # ZMQ
+    volumes:
+      - testnet-blockchain:/home/pirate/.piratebooty/testnet
+      - ./testnet-config:/config:ro
+    environment:
+      - TESTNET=1
+      - RPC_BIND_IP=0.0.0.0
+      - RPC_BIND_PORT=29081
+      - P2P_BIND_IP=0.0.0.0
+      - P2P_BIND_PORT=29080
+      - ZMQ_PUB=tcp://0.0.0.0:29082
+    command: >
+      piratebootyd
+      --testnet
+      --data-dir /home/pirate/.piratebooty/testnet
+      --p2p-bind-ip 0.0.0.0
+      --p2p-bind-port 29080
+      --rpc-bind-ip 0.0.0.0
+      --rpc-bind-port 29081
+      --zmq-pub tcp://0.0.0.0:29082
+      --confirm-external-bind
+      --log-level 1
+      --non-interactive
+    networks:
+      - pirate-testnet
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:29081/get_info"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Pirate Booty Testnet Mining Node
+  piratebooty-testnet-miner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: piratebooty-testnet-miner
+    restart: unless-stopped
+    depends_on:
+      - piratebooty-testnet
+    volumes:
+      - testnet-miner-wallet:/home/pirate/.piratebooty/wallet
+    environment:
+      - TESTNET=1
+      - DAEMON_HOST=piratebooty-testnet
+      - DAEMON_PORT=29081
+      - WALLET_FILE=/home/pirate/.piratebooty/wallet/testnet-miner
+      - WALLET_PASSWORD=${TESTNET_WALLET_PASSWORD:-changeme}
+      - MINING_THREADS=${MINING_THREADS:-2}
+    command: >
+      bash -c "
+      if [ ! -f /home/pirate/.piratebooty/wallet/testnet-miner ]; then
+        echo '🏴‍☠️ Creating testnet miner wallet...';
+        piratebooty-wallet-cli
+          --testnet
+          --generate-new-wallet /home/pirate/.piratebooty/wallet/testnet-miner
+          --password '$${WALLET_PASSWORD}'
+          --restore-height 0
+          --command exit;
+      fi;
+      MINER_ADDRESS=$$(piratebooty-wallet-cli
+        --testnet
+        --wallet-file /home/pirate/.piratebooty/wallet/testnet-miner
+        --password '$${WALLET_PASSWORD}'
+        --command 'address'
+        | grep -oP '4[0-9A-Za-z]{94}' | head -1);
+      echo '🏴‍☠️ Mining to address: '$${MINER_ADDRESS};
+      piratebootyd
+        --testnet
+        --daemon-host $${DAEMON_HOST}
+        --daemon-port $${DAEMON_PORT}
+        --start-mining $${MINER_ADDRESS}
+        --mining-threads $${MINING_THREADS}
+        --log-level 1;
+      "
+    networks:
+      - pirate-testnet
+
+  # Testnet Wallet RPC Server
+  piratebooty-testnet-wallet-rpc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: piratebooty-testnet-wallet-rpc
+    restart: unless-stopped
+    ports:
+      - "29083:29083"
+    depends_on:
+      - piratebooty-testnet
+    volumes:
+      - testnet-wallet-rpc:/home/pirate/.piratebooty/wallet
+    environment:
+      - TESTNET=1
+      - DAEMON_HOST=piratebooty-testnet
+      - DAEMON_PORT=29081
+      - WALLET_RPC_BIND_PORT=29083
+      - WALLET_PASSWORD=${TESTNET_WALLET_RPC_PASSWORD:-changeme}
+    command: >
+      bash -c "
+      if [ ! -f /home/pirate/.piratebooty/wallet/testnet-wallet-rpc ]; then
+        echo '🏴‍☠️ Creating testnet wallet RPC wallet...';
+        piratebooty-wallet-cli
+          --testnet
+          --generate-new-wallet /home/pirate/.piratebooty/wallet/testnet-wallet-rpc
+          --password '$${WALLET_PASSWORD}'
+          --restore-height 0
+          --command exit;
+      fi;
+      piratebooty-wallet-rpc
+        --testnet
+        --daemon-host $${DAEMON_HOST}
+        --daemon-port $${DAEMON_PORT}
+        --wallet-file /home/pirate/.piratebooty/wallet/testnet-wallet-rpc
+        --password '$${WALLET_PASSWORD}'
+        --rpc-bind-port $${WALLET_RPC_BIND_PORT}
+        --rpc-bind-ip 0.0.0.0
+        --confirm-external-bind
+        --disable-rpc-login
+        --log-level 1;
+      "
+    networks:
+      - pirate-testnet
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:29083/json_rpc", "-d", '{"jsonrpc":"2.0","id":"0","method":"get_balance"}']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  pirate-testnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.29.0.0/16
+
+volumes:
+  testnet-blockchain:
+    driver: local
+  testnet-miner-wallet:
+    driver: local
+  testnet-wallet-rpc:
+    driver: local

@@ -2266,25 +2266,26 @@ bool simple_wallet::public_nodes(const std::vector<std::string> &args)
 
 bool simple_wallet::welcome(const std::vector<std::string> &args)
 {
-  message_writer() << tr("Welcome to Monero, the private cryptocurrency.");
+  message_writer() << tr("🏴‍☠️ Welcome to Pirate Booty (PBT), the private cryptocurrency with a pirate twist!");
   message_writer() << "";
-  message_writer() << tr("Monero, like Bitcoin, is a cryptocurrency. That is, it is digital money.");
-  message_writer() << tr("Unlike Bitcoin, your Monero transactions and balance stay private and are not visible to the world by default.");
-  message_writer() << tr("However, you have the option of making those available to select parties if you choose to.");
+  message_writer() << tr("Pirate Booty, like Bitcoin, is a cryptocurrency. That is, it is digital money for pirates and privateers.");
+  message_writer() << tr("Unlike Bitcoin, your Pirate Booty transactions and balance stay private - hidden from landlubbers by default.");
+  message_writer() << tr("However, you have the option of making your treasure visible to select crew members if you choose.");
   message_writer() << "";
-  message_writer() << tr("Monero protects your privacy on the blockchain, and while Monero strives to improve all the time,");
-  message_writer() << tr("no privacy technology can be 100% perfect, Monero included.");
-  message_writer() << tr("Monero cannot protect you from malware, and it may not be as effective as we hope against powerful adversaries.");
-  message_writer() << tr("Flaws in Monero may be discovered in the future, and attacks may be developed to peek under some");
-  message_writer() << tr("of the layers of privacy Monero provides. Be safe and practice defense in depth.");
+  message_writer() << tr("Pirate Booty protects your privacy on the blockchain with stealth addresses and ring signatures,");
+  message_writer() << tr("while no privacy technology can be 100% perfect, we're constantly improving our defenses.");
+  message_writer() << tr("Pirate Booty cannot protect you from malware, and it may not be as effective against powerful adversaries.");
+  message_writer() << tr("Flaws may be discovered in the future, and attacks may peek under some layers of privacy.");
+  message_writer() << tr("Be safe, practice defense in depth, and never reveal your seed phrase to anyone!");
   message_writer() << "";
-  message_writer() << tr("Welcome to Monero and financial privacy. For more information see https://GetMonero.org");
+  message_writer() << tr("⚓ Welcome to Pirate Booty and financial privacy. The seas belong to the miners!");
+  message_writer() << tr("For more information visit: https://piratebooty.io");
   return true;
 }
 
 bool simple_wallet::version(const std::vector<std::string> &args)
 {
-  message_writer() << "Monero '" << MONERO_RELEASE_NAME << "' (v" << MONERO_VERSION_FULL << ")";
+  message_writer() << "🏴‍☠️ Pirate Booty '" << MONERO_RELEASE_NAME << "' (v" << MONERO_VERSION_FULL << ")";
   return true;
 }
 
@@ -4621,7 +4622,7 @@ bool simple_wallet::init(const boost::program_options::variables_map& vm)
     check_background_mining(password);
 
   if (welcome)
-    message_writer(console_color_yellow, true) << tr("If you are new to Monero, type \"welcome\" for a brief overview.");
+    message_writer(console_color_yellow, true) << tr("🏴‍☠️ If you are new to Pirate Booty, type \"welcome\" for a brief overview.");
 
   m_last_activity_time = time(NULL);
   return true;

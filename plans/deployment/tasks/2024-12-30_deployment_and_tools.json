@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "content": "[testnet] Configure testnet genesis block and parameters",
+    "status": "completed"
+  },
+  {
+    "id": "2",
+    "content": "[testnet] Create testnet deployment scripts and Docker compose",
+    "status": "completed"
+  },
+  {
+    "id": "3",
+    "content": "[testnet] Set up bootstrap nodes configuration",
+    "status": "completed"
+  },
+  {
+    "id": "4",
+    "content": "[wallet] Customize CLI wallet with pirate branding",
+    "status": "completed"
+  },
+  {
+    "id": "5",
+    "content": "[wallet] Create wallet RPC customizations for PBT",
+    "status": "completed"
+  },
+  {
+    "id": "6",
+    "content": "[wallet] Design GUI wallet specifications",
+    "status": "completed"
+  },
+  {
+    "id": "7",
+    "content": "[explorer] Design block explorer architecture",
+    "status": "completed"
+  },
+  {
+    "id": "8",
+    "content": "[explorer] Create explorer API endpoints",
+    "status": "completed"
+  },
+  {
+    "id": "9",
+    "content": "[explorer] Create frontend specifications and implementation",
+    "status": "completed"
+  }
+]

@@ -883,6 +883,44 @@ inline const std::string get_rpc_status(const bool trusted_daemon, const std::st
   };
 
   //-----------------------------------------------
+  // Pirate Booty: Get Pirate Hash algorithm information
+  struct COMMAND_RPC_GET_PIRATE_HASH_INFO
+  {
+    struct request_t: public rpc_request_base
+    {
+      BEGIN_KV_SERIALIZE_MAP()
+        KV_SERIALIZE_PARENT(rpc_request_base)
+      END_KV_SERIALIZE_MAP()
+    };
+    typedef epee::misc_utils::struct_init<request_t> request;
+
+    struct response_t: public rpc_response_base
+    {
+      std::string algorithm_name;
+      std::string description;
+      std::string phase1_algorithm;
+      uint32_t phase1_edgebits;
+      uint32_t phase1_cycle_length;
+      std::string phase2_algorithm;
+      uint64_t memory_requirement;
+      bool asic_resistant;
+
+      BEGIN_KV_SERIALIZE_MAP()
+        KV_SERIALIZE_PARENT(rpc_response_base)
+        KV_SERIALIZE(algorithm_name)
+        KV_SERIALIZE(description)
+        KV_SERIALIZE(phase1_algorithm)
+        KV_SERIALIZE(phase1_edgebits)
+        KV_SERIALIZE(phase1_cycle_length)
+        KV_SERIALIZE(phase2_algorithm)
+        KV_SERIALIZE(memory_requirement)
+        KV_SERIALIZE(asic_resistant)
+      END_KV_SERIALIZE_MAP()
+    };
+    typedef epee::misc_utils::struct_init<response_t> response;
+  };
+
+  //-----------------------------------------------
   struct COMMAND_RPC_SAVE_BC
   {
     struct request_t: public rpc_request_base

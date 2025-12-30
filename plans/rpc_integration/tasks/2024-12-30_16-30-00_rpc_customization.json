@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "content": "Update RPC ports for Pirate Booty (mainnet: 19081, testnet: 29081, stagenet: 39081)",
+    "status": "completed"
+  },
+  {
+    "id": "2",
+    "content": "Update software identification from 'monero' to 'piratebooty' in RPC responses",
+    "status": "completed"
+  },
+  {
+    "id": "3",
+    "content": "Customize RPC version strings and daemon version reporting",
+    "status": "completed"
+  },
+  {
+    "id": "4",
+    "content": "Add Pirate Hash specific RPC endpoints (mining stats, algorithm info)",
+    "status": "completed"
+  },
+  {
+    "id": "5",
+    "content": "Update RPC error messages with pirate-themed branding",
+    "status": "completed"
+  },
+  {
+    "id": "6",
+    "content": "Test RPC endpoints and document customizations",
+    "status": "completed"
+  }
+]

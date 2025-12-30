@@ -1,0 +1,11 @@
+# Pirate Booty Testnet Seed Nodes
+# Format: IP:PORT or HOSTNAME:PORT
+# Add your testnet seed nodes here
+
+# Example seed nodes (update with actual IPs once deployed):
+# testnet-seed1.piratebooty.io:29080
+# testnet-seed2.piratebooty.io:29080
+# testnet-seed3.piratebooty.io:29080
+
+# Local testnet node
+127.0.0.1:29080

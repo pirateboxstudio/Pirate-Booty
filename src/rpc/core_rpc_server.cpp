@@ -1444,13 +1444,13 @@ namespace cryptonote
     cryptonote::address_parse_info info;
     if(!get_account_address_from_str(info, nettype(), req.miner_address))
     {
-      res.status = "Failed, wrong address";
+      res.status = "🏴‍☠️ Failed - invalid treasure chest address";
       LOG_PRINT_L0(res.status);
       return true;
     }
     if (info.is_subaddress)
     {
-      res.status = "Mining to subaddress isn't supported yet";
+      res.status = "🏴‍☠️ Mining to subaddress isn't supported yet - use main treasure chest";
       LOG_PRINT_L0(res.status);
       return true;
     }
@@ -1467,7 +1467,7 @@ namespace cryptonote
     // then we fail and log that.
     if(req.threads_count > concurrency_count)
     {
-      res.status = "Failed, too many threads relative to CPU cores.";
+      res.status = "🏴‍☠️ Failed - too many pirates for this ship (threads exceed CPU cores)";
       LOG_PRINT_L0(res.status);
       return true;
     }
@@ -1475,12 +1475,12 @@ namespace cryptonote
     cryptonote::miner &miner= m_core.get_miner();
     if (miner.is_mining())
     {
-      res.status = "Already mining";
+      res.status = "🏴‍☠️ Already mining - pirates are already at sea!";
       return true;
     }
     if(!miner.start(info.address, static_cast<size_t>(req.threads_count), req.do_background_mining, req.ignore_battery))
     {
-      res.status = "Failed, mining not started";
+      res.status = "🏴‍☠️ Failed - pirates refused to set sail";
       LOG_PRINT_L0(res.status);
       return true;
     }
@@ -1494,13 +1494,13 @@ namespace cryptonote
     cryptonote::miner &miner= m_core.get_miner();
     if(!miner.is_mining())
     {
-      res.status = "Mining never started";
+      res.status = "⚓ Mining never started - no pirates at sea";
       LOG_PRINT_L0(res.status);
       return true;
     }
     if(!miner.stop())
     {
-      res.status = "Failed, mining not stopped";
+      res.status = "⚓ Failed to stop mining - pirates refuse to return to port";
       LOG_PRINT_L0(res.status);
       return true;
     }
@@ -1527,15 +1527,25 @@ namespace cryptonote
     if (lMiner.is_mining() || lMiner.get_is_background_mining_enabled())
       res.address = get_account_address_as_str(nettype(), false, lMiningAdr);
     const uint8_t major_version = m_core.get_blockchain_storage().get_current_hard_fork_version();
-    const unsigned variant = major_version >= 7 ? major_version - 6 : 0;
-    switch (variant)
+    
+    // Pirate Booty uses Pirate Hash (hybrid Cuckoo Cycle + CryptoNight) from block version 13
+    if (major_version >= 13)
     {
-      case 0: res.pow_algorithm = "Cryptonight"; break;
-      case 1: res.pow_algorithm = "CNv1 (Cryptonight variant 1)"; break;
-      case 2: case 3: res.pow_algorithm = "CNv2 (Cryptonight variant 2)"; break;
-      case 4: case 5: res.pow_algorithm = "CNv4 (Cryptonight variant 4)"; break;
-      case 6: case 7: case 8: case 9: res.pow_algorithm = "RandomX"; break;
-      default: res.pow_algorithm = "RandomX"; break; // assumed
+      res.pow_algorithm = "Pirate Hash (Cuckoo Cycle + CryptoNight)";
+    }
+    else
+    {
+      // Legacy algorithm support (for compatibility)
+      const unsigned variant = major_version >= 7 ? major_version - 6 : 0;
+      switch (variant)
+      {
+        case 0: res.pow_algorithm = "Cryptonight"; break;
+        case 1: res.pow_algorithm = "CNv1 (Cryptonight variant 1)"; break;
+        case 2: case 3: res.pow_algorithm = "CNv2 (Cryptonight variant 2)"; break;
+        case 4: case 5: res.pow_algorithm = "CNv4 (Cryptonight variant 4)"; break;
+        case 6: case 7: case 8: case 9: res.pow_algorithm = "RandomX"; break;
+        default: res.pow_algorithm = "RandomX"; break; // assumed
+      }
     }
     if (res.is_background_mining_enabled)
     {
@@ -1545,6 +1555,24 @@ namespace cryptonote
       res.bg_target = lMiner.get_mining_target();
     }
 
+    res.status = CORE_RPC_STATUS_OK;
+    return true;
+  }
+  //------------------------------------------------------------------------------------------------------------------------------
+  bool core_rpc_server::on_get_pirate_hash_info(const COMMAND_RPC_GET_PIRATE_HASH_INFO::request& req, COMMAND_RPC_GET_PIRATE_HASH_INFO::response& res, const connection_context *ctx)
+  {
+    RPC_TRACKER(get_pirate_hash_info);
+    
+    // Pirate Hash algorithm information
+    res.algorithm_name = "Pirate Hash";
+    res.description = "🏴‍☠️ Hybrid PoW combining Cuckoo Cycle (memory-hard) and CryptoNight (CPU-friendly) for true ASIC resistance";
+    res.phase1_algorithm = "Cuckoo Cycle";
+    res.phase1_edgebits = 29;  // EDGEBITS = 29
+    res.phase1_cycle_length = 42;  // 42-cycle proof requirement
+    res.phase2_algorithm = "CryptoNight-R (Variant 4)";
+    res.memory_requirement = 512 * 1024 * 1024;  // ~512 MB memory requirement
+    res.asic_resistant = true;
+    
     res.status = CORE_RPC_STATUS_OK;
     return true;
   }
@@ -3181,7 +3209,7 @@ namespace cryptonote
       return true;
     }
 
-    static const char software[] = "monero";
+    static const char software[] = "piratebooty";
 #ifdef BUILD_TAG
     static const char buildtag[] = BOOST_PP_STRINGIZE(BUILD_TAG);
     static const char subdir[] = "cli";
