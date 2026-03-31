@@ -190,7 +190,7 @@ int main(int argc, char const * argv[])
 
     if (command_line::get_arg(vm, command_line::arg_help))
     {
-      std::cout << "Monero '" << MONERO_RELEASE_NAME << "' (v" << MONERO_VERSION_FULL << ")" << ENDL << ENDL;
+      std::cout << "Pirate Booty '" << PIRATEBOOTY_RELEASE_NAME << "' (v" << PIRATEBOOTY_VERSION_FULL << ")" << ENDL << ENDL;
       std::cout << "Usage: " + std::string{argv[0]} + " [options|settings] [daemon_command...]" << std::endl << std::endl;
       std::cout << visible_options << std::endl;
       return 0;
@@ -199,7 +199,7 @@ int main(int argc, char const * argv[])
     // Monero Version
     if (command_line::get_arg(vm, command_line::arg_version))
     {
-      std::cout << "Monero '" << MONERO_RELEASE_NAME << "' (v" << MONERO_VERSION_FULL << ")" << ENDL;
+      std::cout << "Pirate Booty '" << PIRATEBOOTY_RELEASE_NAME << "' (v" << PIRATEBOOTY_VERSION_FULL << ")" << ENDL;
       return 0;
     }
 
@@ -248,7 +248,7 @@ int main(int argc, char const * argv[])
     }
 
     // data_dir
-    //   default: e.g. ~/.bitmonero/ or ~/.bitmonero/testnet
+    //   default: e.g. ~/.piratebooty/ or ~/.piratebooty/testnet
     //   if data-dir argument given:
     //     absolute path
     //     relative path: relative to cwd
