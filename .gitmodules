@@ -17,3 +17,9 @@
 [submodule "external/cuckoo"]
 	path = external/cuckoo
 	url = https://github.com/tromp/cuckoo.git
+[submodule "explorer"]
+	path = explorer
+	url = file:///root/.openclaw/workspace/Pirate-Booty-Explorer
+[submodule "wallet-gui"]
+	path = wallet-gui
+	url = file:///root/.openclaw/workspace/Pirate-Booty-Wallet-GUI

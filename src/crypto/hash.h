@@ -98,12 +98,12 @@ namespace crypto {
   */
 
   inline void pirate_hash(const void *data, std::size_t length, hash &hash, uint64_t height = 0) {
-    pirate_hash(data, length, reinterpret_cast<char *>(&hash), height, NULL);
+    ::pirate_hash(data, length, reinterpret_cast<char *>(&hash), height, NULL);
   }
 
   inline hash pirate_hash(const void *data, std::size_t length, uint64_t height = 0) {
     hash h;
-    pirate_hash(data, length, reinterpret_cast<char *>(&h), height, NULL);
+    ::pirate_hash(data, length, reinterpret_cast<char *>(&h), height, NULL);
     return h;
   }
 
